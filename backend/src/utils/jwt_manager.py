@@ -54,8 +54,8 @@ class JWTManager:
         )
 
     @staticmethod
-    def verify_token(token: str) -> int:
-        """验证token有效性并返回user id"""
+    def verify_token(token: str) -> tuple[int, str]:
+        """验证token有效性并返回user id、token type"""
         try:
             # 解码获取payload
             payload = jwt.decode(
@@ -65,14 +65,7 @@ class JWTManager:
             )
 
             # 读取user id并验证
-            if payload.get('sub'):
-                return int(payload['sub'])
-            else:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="无效的token",
-                    headers={"WWW-Authenticate": "Bearer"}
-                )
+            return int(payload['sub']), payload['type']
 
         except jwt.ExpiredSignatureError:
             raise HTTPException(

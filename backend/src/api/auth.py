@@ -94,7 +94,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
 @router.post(
     "/refresh",
     status_code=status.HTTP_200_OK,
-    response_model=TokenResponse,
+    response_model=RefreshResponse,
     responses={
         "401": {"description": "无效的token"},
         "404": {"description": "用户不存在或已被禁用"}
@@ -107,7 +107,14 @@ def refresh(request: RefreshRequest, db: Session = Depends(get_db)):
     - refresh_token: refresh token
     """
     # 验证token
-    user_id: int = JWTManager.verify_token(request.refresh_token)
+    user_id, token_type = JWTManager.verify_token(request.refresh_token)
+
+    # 检查token type
+    if token_type != "refresh":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="无效的token"
+        )
 
     # 检查user id
     user: User | None = db.query(User).filter(User.id == user_id).first()
