@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { registerAPI, loginAPI, refreshAPI } from '@/services/auth'
+import { getUserInfoAPI, updateUserInfoAPI } from '@/services/user'
 
 const useUserStore = defineStore('user', () => {
     // ========= 基础属性 =========
@@ -18,11 +19,15 @@ const useUserStore = defineStore('user', () => {
     const userInfo = ref<{
         nickname: string | null,
         username: string | null,
-        email: string | null
+        email: string | null,
+        avatar: string | null,
+        created_at: string | null
     }>({
         nickname: null,
         username: null,
-        email: null
+        email: null,
+        avatar: null,
+        created_at: null
     })
     
     // ========= 计算属性 =======
@@ -113,10 +118,44 @@ const useUserStore = defineStore('user', () => {
     /**
      * 获取用户信息方法
      */
+    const getUserInfo = async () => {
+        try {
+            // 调用接口
+            const response = await getUserInfoAPI()
+            userInfo.value = {
+                nickname: response.nickname,
+                username: response.username,
+                email: response.email,
+                avatar: response.avatar,
+                created_at: response.created_at
+            }
+        } catch(error) {
+            return Promise.reject(error)
+        }
+    }
 
     /**
      * 修改用户信息方法
+     * @param nickname? <string> - 要修改的用户昵称
+     * @param avatar? <string> - 要修改的用户头像(url/base64)
      */
+    const updateUserInfo = async (nickname?: string, avatar?: string) => {
+        try {
+            const response = await updateUserInfoAPI({
+                ...(nickname && { nickname }),
+                ...(avatar && { avatar })
+            })
+            userInfo.value = {
+                nickname: response.nickname,
+                username: response.username,
+                email: response.email,
+                avatar: response.avatar,
+                created_at: response.created_at
+            }
+        } catch(error) {
+            return Promise.reject(error)
+        }
+    }
 
     return {
         token,
@@ -124,7 +163,9 @@ const useUserStore = defineStore('user', () => {
         isLogged,
         register,
         login,
-        refresh
+        refresh,
+        getUserInfo,
+        updateUserInfo
     }
 })
 
