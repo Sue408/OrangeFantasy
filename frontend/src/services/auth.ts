@@ -18,7 +18,7 @@ export const registerAPI = async (data: RegisterRequest): Promise<TokenResponse>
 /**
  * 登录接口
  */
-export const LoginAPI = async (data: LoginRequest): Promise<TokenResponse> => {
+export const loginAPI = async (data: LoginRequest): Promise<TokenResponse> => {
     return http.post<TokenResponse>(`${config.baseUrl}/auth/login`, data)
 }
 
