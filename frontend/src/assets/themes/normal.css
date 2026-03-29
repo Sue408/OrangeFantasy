@@ -1,0 +1,23 @@
+/* 默认样式 */
+:root {
+    /* 主背景 */
+    --bg-color: #191819;
+
+    /* 主色调 */
+    --primary-color: #c25722;
+
+    /* 悬浮卡片 */
+    --float-card-bg-color: rgba(111, 110, 109, 0.3);
+    --float-card-border-radius: 24px;
+    --float-card-shadow: 0px 2px 5px rgba(255, 255, 255, 0.3);
+
+    /* TopBar 按钮样式 */
+    --btn-border-radius: 12px;
+    --btn-bg-color: #232222;
+    --btn-bg-hover: #a05631;
+    --btn-bg-active: #a84619;
+    --btn-text-color: #ccc;
+    --btn-shadow: 0px 4px 12px rgba(194, 87, 34, 0.4);
+    --btn-shadow-hover: 0px 6px 16px rgba(194, 87, 34, 0.6);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
