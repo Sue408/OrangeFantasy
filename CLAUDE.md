@@ -69,51 +69,12 @@ api/ (路由定义)
 main.py (启动)
 ```
 
-## 数据库设计
+## 编码规范
 
-### Users表
-- id (主键)
-- nickname (昵称/笔名)
-- avatar (头像URL/Base64)
-- phone (手机号，唯一)
-- password_hash (密码哈希)
-- 关系：一对多关联Novels
-
-### Novels表
-- id (主键)
-- user_id (外键)
-- name (作品名称)
-- type (枚举："short"/"long")
-- 关系：多对一关联Users，一对多关联Chapters
-
-### Chapters表
-- id (主键)
-- novel_id (外键)
-- name (章节名称)
-- number (章节序号)
-- step (卷名称，可空)
-- content (文本内容，<30000字)
-- 关系：多对一关联Novels
-
-## 编码风格与偏好
-
-### 前端
-- **组件组织**：按功能域分组 (common/, home/, working/, creation/)
-- **状态管理**：使用Pinia的组合式API风格 (`defineStore` + `ref/computed`)
-- **HTTP请求**：通过 `http.ts` 的泛型包装器，支持 `get<T>/post<T>/put<T>/delete<T>`
-- **路由**：使用动态导入 (`() => import(...)`) 实现代码分割
-- **样式**：
-  - 全局重置：`* { margin: 0; padding: 0; box-sizing: border-box; }`
-  - 通用卡片样式：`.card { border-radius: 24px; background: rgba(99, 106, 108, 0.3); box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.2); }`
-  - 深色主题：背景 `#2f2f2f`，使用半透明白色阴影
-  - 自定义字体：`Crystal-Light-2.ttf` 用于标题
-
-### 后端
-- **配置管理**：使用Pydantic的 `BaseSettings` 读取环境变量
-- **数据验证**：所有API输入/输出使用Pydantic schemas
-- **路由组织**：按功能模块分离 (auth.py, user.py等)，通过 `app.include_router()` 注册，统一前缀 `/api/{module}`
-- **依赖注入**：使用FastAPI的 `Depends()` 注入数据库会话、认证信息等
-- **错误处理**：返回标准HTTP状态码与结构化错误响应
+详见项目级skills：
+- **前端**：`frontend-coding-standards` (Vue3 + TypeScript规范)
+- **后端**：`backend-coding-standards` (FastAPI + Python规范)
+- **设计**：`frontend-design` (UI/UX规范)
 
 ## 开发命令
 
