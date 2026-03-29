@@ -33,7 +33,7 @@ const useUserStore = defineStore('user', () => {
     // ========= 计算属性 =======
     // 1. 登录态
     const isLogged = computed(() => {
-        return !!token.value
+        return !!token.value.accessToken
     })
 
     // ========= 方法定义 =========
@@ -116,6 +116,25 @@ const useUserStore = defineStore('user', () => {
     }
 
     /**
+     * 登出方法
+     */
+    const logout = async () => {
+        // 清除token信息
+        token.value = {accessToken: null, refreshToken: null}
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+
+        // 清除用户信息
+        userInfo.value = {
+        nickname: null,
+        username: null,
+        email: null,
+        avatar: null,
+        created_at: null
+    }
+    }
+
+    /**
      * 获取用户信息方法
      */
     const getUserInfo = async () => {
@@ -164,6 +183,7 @@ const useUserStore = defineStore('user', () => {
         register,
         login,
         refresh,
+        logout,
         getUserInfo,
         updateUserInfo
     }
