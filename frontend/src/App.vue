@@ -1,6 +1,10 @@
 <template>
     <div class="app-container">
-        <router-view />
+        <router-view v-slot="{ Component }">
+            <transition name="app-fade" mode="out-in">
+                <component :is="Component" />
+            </transition>
+        </router-view>
     </div>
 </template>
 
@@ -34,6 +38,16 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .app-fade-enter-active,
+    .app-fade-leave-active {
+    transition: opacity 0.5s ease;
+    }
+
+    .app-fade-enter-from,
+    .app-fade-leave-to {
+    opacity: 0;
     }
 
     @font-face {

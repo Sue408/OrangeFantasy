@@ -65,13 +65,11 @@
         font-size: 0.82rem;
         font-family: 'Btn-Text';
         letter-spacing: 0.04rem;
-        box-shadow: var(--btn-shadow);
         cursor: pointer;
         transition: var(--transition-smooth);
     }
 
     .auth-wrapper .auth-btn:hover {
-        background-color: var(--btn-bg-hover);
         box-shadow: var(--btn-shadow-hover);
         transform: translateY(-1px);
     }

@@ -3,20 +3,32 @@
     /* 主背景 */
     --bg-color: #191819;
 
+    /* 字体颜色 */
+    --text-color: #ccc;
+
     /* 主色调 */
     --primary-color: #c25722;
+    --supple-color: #a05631;
 
     /* 悬浮卡片 */
     --float-card-bg-color: rgba(111, 110, 109, 0.3);
     --float-card-border-radius: 24px;
     --float-card-shadow: 0px 2px 5px rgba(255, 255, 255, 0.3);
 
-    /* TopBar 按钮样式 */
+    /* 输入框样式 */
+    --input-border-radius: 8px;
+    --input-box-shadow: 0 0 5px rgba(236, 96, 26, 0.8),
+                        0 0 10px rgba(236, 96, 26, 0.9);
+    --input-bg-color: #232222;
+    --input-text-color: #ccc;
+
+    /* 按钮样式 */
     --btn-border-radius: 12px;
     --btn-bg-color: #232222;
-    --btn-bg-hover: #a05631;
-    --btn-bg-active: #a84619;
+    --btn-bg-color-light: #ccc;
+    --btn-bg-active: #f19c74;
     --btn-text-color: #ccc;
+    --btn-text-color-light: #333;
     --btn-shadow: 0px 4px 12px rgba(194, 87, 34, 0.4);
     --btn-shadow-hover: 0px 6px 16px rgba(194, 87, 34, 0.6);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
