@@ -41,20 +41,23 @@ request.interceptors.response.use(
 
         // 401错误自动进行重新验证
         if (statusCode === 401) {
+            const userStore = useUserStore()
 
             // 判断是否为刷新请求或已经重试
             if (error.config?.url?.includes('auth/refresh')) {
+                await userStore.logout()
                 router.replace('/auth')
                 return Promise.reject(error)
             }
 
             // 自动进行token刷新并重新发送请求
-            const userStore = useUserStore()
+            
             try {
                 await userStore.refresh()
                 return request(error.config!)
             } catch(error) {
                 // 刷新失败则自动跳转到登录页面并返回错误
+                await userStore.logout()
                 router.replace('/auth')
                 return Promise.reject(error)
             }
