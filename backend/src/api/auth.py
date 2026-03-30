@@ -67,7 +67,7 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
     status_code=status.HTTP_200_OK,
     response_model=TokenResponse,
     responses={
-        "401": {"description": "账户或密码错误"}
+        "404": {"description": "账户或密码错误"}
     }
 )
 def login(request: LoginRequest, db: Session = Depends(get_db)):
@@ -81,7 +81,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     user: User | None = db.query(User).filter(User.username == request.username).first()
     if not user or not PasswordHasher.verify(request.password, user.hashed_password):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="账号或密码错误"
         )
 

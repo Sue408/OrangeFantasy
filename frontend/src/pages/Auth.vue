@@ -30,23 +30,23 @@
                 <form>
                     <!-- 账号 -->
                     <div class="form-group">
-                        <label for="username"></label>
-                        <input id="username" name="username" type="text" placeholder="账号">
+                        <label for="reg-username"></label>
+                        <input id="reg-username" v-model="registerForm.username" type="text" placeholder="账号">
                         <span>
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             fill="currentColor" viewBox="0 0 24 24" >
                             <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
                             <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5m0-8c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3M4 22h16c.55 0 1-.45 1-1v-1c0-3.86-3.14-7-7-7h-4c-3.86 0-7 3.14-7 7v1c0 .55.45 1 1 1m6-7h4c2.76 0 5 2.24 5 5H5c0-2.76 2.24-5 5-5"></path>
                             </svg>
                         </span>
                     </div>
-                     
+
                     <!-- 邮箱 -->
                      <div class="form-group">
                         <label for="email"></label>
-                        <input id="email" name="email" type="text" placeholder="注册邮箱">
+                        <input id="email" v-model="registerForm.email" type="text" placeholder="注册邮箱">
                         <span>
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             fill="currentColor" viewBox="0 0 24 24" >
                             <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
                             <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 2v.51l-8 6.22-8-6.22V6zM4 18V9.04l7.39 5.74c.18.14.4.21.61.21s.43-.07.61-.21L20 9.03v8.96H4Z"></path>
@@ -56,10 +56,10 @@
 
                     <!-- 密码 -->
                      <div class="form-group">
-                        <label for="password"></label>
-                        <input id="password" name="password" type="text" placeholder="密码 (6位)">
+                        <label for="reg-password"></label>
+                        <input id="reg-password" v-model="registerForm.password" type="password" placeholder="密码 (6位)">
                         <span>
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             fill="currentColor" viewBox="0 0 24 24" >
                             <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
                             <path d="M8 21c2.76 0 5-2.24 5-5 0-1.02-.31-1.96-.83-2.75l3.33-3.33 1.79 1.79 1.41-1.41-1.79-1.79L18 7.42l2.29 2.29L21.7 8.3l-2.29-2.29 1.29-1.29-1.41-1.41-8.54 8.54c-.79-.52-1.74-.83-2.75-.83-2.76 0-5 2.24-5 5s2.24 5 5 5Zm0-8c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3"></path>
@@ -70,9 +70,9 @@
                     <!-- 确认密码 -->
                      <div class="form-group">
                         <label for="confirm-password"></label>
-                        <input id="confirm-password" name="confirmPassword" type="text" placeholder="确认密码">
+                        <input id="confirm-password" v-model="registerForm.confirmPassword" type="password" placeholder="确认密码">
                         <span>
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             fill="currentColor" viewBox="0 0 24 24" >
                             <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
                             <path d="M6 22h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5S7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2M9 7c0-1.65 1.35-3 3-3s3 1.35 3 3v2H9zm-3 4h12v9h-5v-2.28c.59-.35 1-.99 1-1.72 0-1.1-.9-2-2-2s-2 .9-2 2a2 2 0 0 0 1 1.72V20H6z"></path>
@@ -83,7 +83,7 @@
                     <!-- 验证码 -->
                      <div class="form-group">
                         <label for="verify-code"></label>
-                        <input id="verify-code" name="verifyCode" type="text" placeholder="邮箱验证码">
+                        <input id="verify-code" v-model="registerForm.verifyCode" type="text" placeholder="邮箱验证码">
                         <span>
                             <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
                             fill="currentColor" viewBox="0 0 24 24" >
@@ -95,7 +95,7 @@
                 </form>
 
                 <!-- 提交按钮 -->
-                <button>注册</button>
+                <button @click="handleRegister" :disabled="isLoading">{{ errorMessage || '注册' }}</button>
             </div>
 
             <!-- 登录表单 -->
@@ -109,10 +109,10 @@
                 <form>
                     <!-- 账号 -->
                     <div class="form-group">
-                        <label for="username"></label>
-                        <input id="username" name="username" type="text" placeholder="账号">
+                        <label for="login-username"></label>
+                        <input id="login-username" v-model="loginForm.username" type="text" placeholder="账号">
                         <span>
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             fill="currentColor" viewBox="0 0 24 24" >
                             <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
                             <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5m0-8c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3M4 22h16c.55 0 1-.45 1-1v-1c0-3.86-3.14-7-7-7h-4c-3.86 0-7 3.14-7 7v1c0 .55.45 1 1 1m6-7h4c2.76 0 5 2.24 5 5H5c0-2.76 2.24-5 5-5"></path>
@@ -122,10 +122,10 @@
 
                     <!-- 密码 -->
                     <div class="form-group">
-                        <label for="password"></label>
-                        <input id="password" name="password" type="text" placeholder="密码">
+                        <label for="login-password"></label>
+                        <input id="login-password" v-model="loginForm.password" type="password" placeholder="密码">
                         <span>
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             fill="currentColor" viewBox="0 0 24 24" >
                             <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
                             <path d="M8 21c2.76 0 5-2.24 5-5 0-1.02-.31-1.96-.83-2.75l3.33-3.33 1.79 1.79 1.41-1.41-1.79-1.79L18 7.42l2.29 2.29L21.7 8.3l-2.29-2.29 1.29-1.29-1.41-1.41-8.54 8.54c-.79-.52-1.74-.83-2.75-.83-2.76 0-5 2.24-5 5s2.24 5 5 5Zm0-8c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3"></path>
@@ -140,20 +140,127 @@
                 </div>
 
                 <!-- 提交按钮 -->
-                <button>登录</button>
+                <button @click="handleLogin" :disabled="isLoading">{{ errorMessage || '登录' }}</button>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-    import { ref } from 'vue'
+    import { reactive, ref, onUnmounted } from 'vue'
+    import { useRouter } from 'vue-router'
+    import useUserStore from '@/stores/userSotre'
+    import errorParser from '@/utils/errorParser'
+    import Background from '@/components/auth/Background.vue'
+
+    // 实例化router, user store
+    const router = useRouter()
+    const userStore = useUserStore()
+
+    // 表单数据
+    // 1. 登录表单数据绑定
+    const loginForm = reactive({
+        username: '',
+        password: ''
+    })
+    // 2. 注册表单数据绑定
+    const registerForm = reactive({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        verifyCode: ''
+    })
 
     // 登录/注册模式切换功能
     const loginModel = ref<boolean>(true)
     const toggle = () => {
         loginModel.value = !loginModel.value
+        errorMessage.value = ''
     }
+
+    // 错误处理
+    const errorMessage = ref<string>('')
+    const isLoading = ref<boolean>(false)
+    let errorTimer: ReturnType<typeof setTimeout> | null = null
+
+    const showError = (msg: string) => {
+        errorMessage.value = msg
+        if (errorTimer) clearTimeout(errorTimer)
+        errorTimer = setTimeout(() => {
+            errorMessage.value = ''
+        }, 1500) // 显示1.5s
+    }
+
+    // 表单验证逻辑 (兼容注册/登录逻辑)
+    const validateForm = (isRegister: boolean): string | null => {
+        if (isRegister) {
+            if (!registerForm.username) return '账号不能为空'
+            if (!registerForm.email) return '邮箱不能为空'
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email)) return '邮箱格式不正确'
+            if (!registerForm.password) return '密码不能为空'
+            if (registerForm.password.length < 6) return '密码至少6位'
+            if (!registerForm.confirmPassword) return '确认密码不能为空'
+            if (registerForm.password !== registerForm.confirmPassword) return '两次密码不一致'
+            if (!registerForm.verifyCode) return '验证码不能为空'
+        } else {
+            if (!loginForm.username) return '账号不能为空'
+            if (!loginForm.password) return '密码不能为空'
+            if (loginForm.password.length < 6) return '密码至少6位'
+        }
+        return null
+    }
+
+    // 登录逻辑实现
+    const handleLogin = async () => {
+        // 执行登录表单验证
+        const error = validateForm(false)
+        if (error) {
+            // 展示错误信息
+            showError(error)
+            return
+        }
+
+        // 设置loading状态
+        isLoading.value = true
+        try {
+            // 调用登录接口并执行路由跳转
+            await userStore.login(loginForm.username, loginForm.password)
+            router.replace('/')
+        } catch (error: any) {
+            const msg = errorParser(error)
+            showError(msg)
+        } finally {
+            // 移除loading状态
+            isLoading.value = false
+        }
+    }
+
+    // 注册逻辑实现
+    const handleRegister = async () => {
+        // 执行注册表单验证
+        const error = validateForm(true)
+        if (error) {
+            showError(error)
+            return
+        }
+
+        isLoading.value = true
+        try {
+            await userStore.register(registerForm.email, registerForm.username, registerForm.password)
+            router.replace('/')
+        } catch (err: any) {
+            const msg = errorParser(error)
+            showError(msg)
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    // 组件卸载的时候自动删除定时器对象
+    onUnmounted(() => {
+        if (errorTimer) clearTimeout(errorTimer)
+    })
 
     // 第三方登录设置
     interface ThirdLoginSetting {
@@ -163,7 +270,7 @@
     const thirdLoginSettings: ThirdLoginSetting[] = [
         {
             name: 'phone',
-            logo: `<svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+            logo: `<svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                     fill="currentColor" viewBox="0 0 24 24" >
                     <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
                     <path d="M18.07 22h.35c.47-.02.9-.26 1.17-.64l2.14-3.09c.23-.33.32-.74.24-1.14s-.31-.74-.64-.97l-4.64-3.09a1.47 1.47 0 0 0-.83-.25c-.41 0-.81.16-1.1.48l-1.47 1.59c-.69-.43-1.61-1.07-2.36-1.82-.72-.72-1.37-1.64-1.82-2.36l1.59-1.47c.54-.5.64-1.32.23-1.93L7.84 2.67c-.22-.33-.57-.57-.97-.64a1.46 1.46 0 0 0-1.13.24L2.65 4.41c-.39.27-.62.7-.64 1.17-.03.69-.16 6.9 4.68 11.74 4.35 4.35 9.81 4.69 11.38 4.69ZM6.88 10.05c-.16.15-.21.39-.11.59.05.09 1.15 2.24 2.74 3.84 1.6 1.6 3.75 2.7 3.84 2.75.2.1.44.06.59-.11l1.99-2.15 3.86 2.57-1.7 2.46c-1.16 0-6.13-.24-9.99-4.1S4 7.06 4 5.91l2.46-1.7 2.57 3.86-2.15 1.99Z"></path>
@@ -189,6 +296,7 @@
         min-width: 450px;
         overflow: hidden;
         display: flex;
+        z-index: 10;
     }
 
     /* 滑动窗口 */
@@ -374,14 +482,19 @@
         border: none;
     }
 
-    .form-card button:hover {
+    .form-card button:hover:not(:disabled) {
         transform: translateY(-1px);
         box-shadow: var(--input-box-shadow);
     }
 
-    .form-card button:active {
+    .form-card button:active:not(:disabled) {
         transform: translateY(0px);
         background-color: var(--btn-bg-active);
+    }
+
+    .form-card button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
     }
 
     /* 第三方登录 */
