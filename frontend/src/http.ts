@@ -46,7 +46,7 @@ request.interceptors.response.use(
             // 判断是否为刷新请求或已经重试
             if (error.config?.url?.includes('auth/refresh')) {
                 await userStore.logout()
-                router.replace('/auth')
+                router.replace('')
                 return Promise.reject(error)
             }
 
@@ -56,9 +56,9 @@ request.interceptors.response.use(
                 await userStore.refresh()
                 return request(error.config!)
             } catch(error) {
-                // 刷新失败则自动跳转到登录页面并返回错误
+                // 刷新失败则自动跳转到介绍页面并返回错误
                 await userStore.logout()
-                router.replace('/auth')
+                router.replace('')
                 return Promise.reject(error)
             }
         }
@@ -70,16 +70,20 @@ request.interceptors.response.use(
 // 泛型支持导出
 const http = {
     async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-        return await request.get(url, config)
+        const response = await request.get<T>(url, config)
+        return response.data
     },
     async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-        return await request.post(url, data, config)
+        const response = await request.post<T>(url, data, config)
+        return response.data
     },
     async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-        return await request.put(url, data, config)
+        const response = await request.put<T>(url, data, config)
+        return response.data
     },
     async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-        return await request.delete(url, config)
+        const response = await request.delete<T>(url, config)
+        return response.data
     }
 }
 export default http
