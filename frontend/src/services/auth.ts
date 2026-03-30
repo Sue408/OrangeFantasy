@@ -12,19 +12,19 @@ import type {
  * 注册接口
  */
 export const registerAPI = async (data: RegisterRequest): Promise<TokenResponse> => {
-    return http.post<TokenResponse>(`${config.baseUrl}/auth/register`, data)
+    return await http.post<TokenResponse>(`${config.baseUrl}/auth/register`, data)
 }
 
 /**
  * 登录接口
  */
 export const loginAPI = async (data: LoginRequest): Promise<TokenResponse> => {
-    return http.post<TokenResponse>(`${config.baseUrl}/auth/login`, data)
+    return await http.post<TokenResponse>(`${config.baseUrl}/auth/login`, data)
 }
 
 /**
  * 刷新token接口
  */
 export const refreshAPI = async (data: RefreshRequest): Promise<RefreshResponse> => {
-    return http.post<RefreshResponse>(`${config.baseUrl}/auth/refresh`, data)
+    return await http.post<RefreshResponse>(`${config.baseUrl}/auth/refresh`, data)
 }

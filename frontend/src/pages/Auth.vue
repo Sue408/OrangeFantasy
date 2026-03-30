@@ -291,7 +291,7 @@
     .form-wrapper {
         position: relative;
         height: 60%;
-        width: 70%;
+        width: 60%;
         min-height: 300px;
         min-width: 450px;
         overflow: hidden;

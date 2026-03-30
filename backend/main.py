@@ -4,7 +4,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src import config, Base, engine
-from src import auth_router
+from src import auth_router, user_router
 
 
 # ========= 初始化数据库 =========
@@ -37,6 +37,13 @@ app.include_router(
     auth_router,
     prefix="/api/auth",
     tags=["auth"]
+)
+
+# 2. user router
+app.include_router(
+    user_router,
+    prefix="/api/user",
+    tags=["user"]
 )
 
 # ========= 程序入口 =========

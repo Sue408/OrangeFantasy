@@ -8,7 +8,21 @@
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+    import { onMounted, nextTick } from 'vue'
+    import useUserStore from './stores/userSotre'
+
+    onMounted(() => {
+        nextTick(async () => {
+            const userStore = useUserStore()
+            try {
+                await userStore.loadUser()
+            } catch(error) {
+                return Promise.reject(error)
+            }
+        })
+    })
+</script>
 
 <style>
     * {

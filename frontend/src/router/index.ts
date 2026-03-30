@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import useUserStore from '@/stores/userSotre'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -6,6 +7,11 @@ const routes: RouteRecordRaw[] = [
     name: 'Home',
     component: () => import('@/pages/Home.vue'),
     children: [
+      {
+        path: '',
+        name: 'HomeRoot',
+        redirect: {name: 'Introduce'}
+      },
       {
         path: 'introduce',
         name: 'Introduce',
@@ -35,6 +41,27 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+})
+
+// 添加路由守卫
+router.beforeEach((to) => {
+  const userStore = useUserStore()
+
+  // 检查是否需要登录访问限制
+  if (to.meta.requireLogged) {
+    // 如果未登录则返回根路由
+    if (!userStore.isLogged) {
+      userStore.logout()
+      return {path: '/', replace: true}
+    }
+  }
+
+  // 如果登录且访问auth页面则拒绝跳转
+  if (to.name === 'Auth' && userStore.isLogged) {
+    return false
+  }
+
+  return true
 })
 
 export default router

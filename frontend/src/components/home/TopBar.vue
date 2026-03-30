@@ -29,13 +29,11 @@
     const userStore = useUserStore()
     const router = useRouter()
 
-    // userStore.token = {accessToken: '1', refreshToken: '1'}
-
     /**
      * 跳转登录页面
      */
     function goToAuth() {
-        router.replace('/auth')
+        router.push('/auth')
     }
 </script>
 
