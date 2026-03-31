@@ -8,32 +8,23 @@ const useUserStore = defineStore('user', () => {
     // ========= 基础属性 =========
     // 1. token信息
     const token = ref<{
-        accessToken: string | null,
-        refreshToken: string | null
-        }>({
-            accessToken: null,
-            refreshToken: null
-        })
+        accessToken: string,
+        refreshToken: string
+        } | null>(null)
 
     // 2. 用户信息
     const userInfo = ref<{
         nickname: string | null,
-        username: string | null,
-        email: string | null,
+        username: string,
+        email: string,
         avatar: string | null,
-        created_at: string | null
-    }>({
-        nickname: null,
-        username: null,
-        email: null,
-        avatar: null,
-        created_at: null
-    })
+        created_at: string
+    } | null>(null)
     
     // ========= 计算属性 =======
     // 1. 登录态
     const isLogged = computed(() => {
-        return !!localStorage.getItem('accessToken')
+        return !!token.value
     })
 
     // ========= 方法定义 =========
@@ -50,18 +41,17 @@ const useUserStore = defineStore('user', () => {
     ) => {
         try {
             // 调用注册接口
-            const tokenResponse = await registerAPI({email, username, password})
+            const response = await registerAPI({email, username, password})
 
             // 保存token到store
             token.value = {
-                accessToken: tokenResponse.access_token,
-                refreshToken: tokenResponse.refresh_token
+                accessToken: response.access_token,
+                refreshToken: response.refresh_token
             }
 
             // 保存token到localStorge
-            localStorage.setItem('accessToken', tokenResponse.access_token)
-            localStorage.setItem('refreshToken', tokenResponse.refresh_token)
-
+            localStorage.setItem('accessToken', response.access_token)
+            localStorage.setItem('refreshToken', response.refresh_token)
         } catch(error) {
             return Promise.reject(error)
         }
@@ -78,18 +68,17 @@ const useUserStore = defineStore('user', () => {
     ) => {
         try {
             // 调用登录接口
-            const tokenResponse = await loginAPI({username, password})
+            const response = await loginAPI({username, password})
 
             // 保存token到store
             token.value = {
-                accessToken: tokenResponse.access_token,
-                refreshToken: tokenResponse.refresh_token
+                accessToken: response.access_token,
+                refreshToken: response.refresh_token
             }
 
             // 保存token到localStorge
-            localStorage.setItem('accessToken', tokenResponse.access_token)
-            localStorage.setItem('refreshToken', tokenResponse.refresh_token)
-
+            localStorage.setItem('accessToken', response.access_token)
+            localStorage.setItem('refreshToken', response.refresh_token)
         } catch(error) {
             return Promise.reject(error)
         }
@@ -101,15 +90,15 @@ const useUserStore = defineStore('user', () => {
     const refresh = async () => {
         try {
             // 检查refresh token
-            const refreshToken = token.value.refreshToken
+            const refreshToken = token.value?.refreshToken
             if (!refreshToken) return Promise.reject('未持有refresh token')
 
             // 调用刷新接口
-            const TokenResponse = await refreshAPI({refresh_token: refreshToken})
+            const response = await refreshAPI({refresh_token: refreshToken})
 
             // 储存新的access token
-            token.value = {accessToken: TokenResponse.access_token, refreshToken}
-            localStorage.setItem('accessToken', TokenResponse.access_token)
+            token.value = {accessToken: response.access_token, refreshToken}
+            localStorage.setItem('accessToken', response.access_token)
         } catch(error) {
             return Promise.reject(error)
         }
@@ -120,18 +109,12 @@ const useUserStore = defineStore('user', () => {
      */
     const logout = async () => {
         // 清除token信息
-        token.value = {accessToken: null, refreshToken: null}
+        token.value = null
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
 
         // 清除用户信息
-        userInfo.value = {
-        nickname: null,
-        username: null,
-        email: null,
-        avatar: null,
-        created_at: null
-    }
+        userInfo.value = null
     }
 
     /**
@@ -177,17 +160,18 @@ const useUserStore = defineStore('user', () => {
     }
 
     /**
-     * 尝试加载用户信息
-     * @returns boolean - 加载是否成功
+     * 从localStorage加载token并获取用户信息
      */
     const loadUser = async () => {
-        // 是否登录
-        if (isLogged.value) {
+        // 获取token信息
+        const accessToken = localStorage.getItem('accessToken')
+        const refreshToken = localStorage.getItem('refreshToken')
+        
+        // 检查是否存在token
+        if (accessToken && refreshToken) {
+            token.value = {accessToken, refreshToken}
             try {
                 await getUserInfo()
-                const accessToken = localStorage.getItem('accessToken')
-                const refreshToken = localStorage.getItem('refreshToken')
-                token.value = {accessToken, refreshToken}
             } catch(error) {
                 return Promise.reject(error)
             }

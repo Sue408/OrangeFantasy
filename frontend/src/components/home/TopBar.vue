@@ -1,21 +1,21 @@
 <template>
     <div class="top-bar-container">
         <!-- LOGO -->
-        <div class="logo-wrapper">
+        <div class="logo-wrapper" @click="routerLeap('Introduce')">
             <h3>OrangeFantasy</h3>
         </div>
 
         <!-- 用户头像 or 登录/注册按钮 -->
         <div class="user-wrapper">
             <!-- 用户头像 -->
-            <div class="avatar-wrapper" v-if="userStore.isLogged">
-                <img v-if="userStore.userInfo.avatar" :src="userStore.userInfo.avatar" :alt="userStore.userInfo.nickname || 'avatar'" class="avatar-img" />
-                <div v-else class="avatar-placeholder">{{ userStore.userInfo.nickname?.charAt(0) || 'U' }}</div>
+            <div class="avatar-wrapper" v-if="userStore.isLogged" @click="routerLeap('UserCenter')">
+                <img v-if="userStore.userInfo?.avatar" :src="userStore.userInfo.avatar" :alt="userStore.userInfo.nickname || 'avatar'" class="avatar-img" />
+                <div v-else class="avatar-placeholder">{{ userStore.userInfo?.nickname?.charAt(0) || 'U' }}</div>
             </div>
 
             <!-- 登录按钮 -->
             <div class="auth-wrapper" v-else>
-                <button class="auth-btn small-btn" @click="goToAuth">登录/注册</button>
+                <button class="auth-btn small-btn" @click="routerLeap('Auth')">登录/注册</button>
             </div>
 
         </div>
@@ -30,10 +30,15 @@
     const router = useRouter()
 
     /**
-     * 跳转登录页面
+     * 页面跳转封装
+     * @param name <string> - 路由名称
      */
-    function goToAuth() {
-        router.push('/auth')
+    const routerLeap = (name: string): void => {
+        if (name === 'Auth') {
+            router.push({name})
+        } else {
+            router.replace({name})
+        }
     }
 </script>
 
@@ -45,6 +50,7 @@
         align-items: center;
         justify-content: space-between;
         padding: 0 20px 0 30px;
+        user-select: none;
     }
 
     .logo-wrapper h3 {
@@ -53,6 +59,11 @@
         font-weight: 1200;
         letter-spacing: 0.2rem;
         font-family: 'Title';
+        cursor: pointer;
+    }
+
+    .user-wrapper {
+        cursor: pointer;
     }
 
     /* 登录/注册按钮 */

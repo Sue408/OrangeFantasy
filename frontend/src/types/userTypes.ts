@@ -6,7 +6,7 @@ export interface UserInfoResponse {
     username: string
     nickname: string | null
     avatar: string | null
-    created_at: string | null
+    created_at: string
 }
 
 // 更新用户信息请求
