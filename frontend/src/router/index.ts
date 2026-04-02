@@ -24,10 +24,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/home/MyNovels.vue')
       },
       {
-        path: 'writing',
-        name: 'Writing',
+        path: 'userCenter',
+        name: 'UserCenter',
         meta: { requireLogged: true },
-        component: () => import('@/pages/home/Writing.vue')
+        component: () => import('@/pages/home/UserCenter.vue')
       }
     ]
   },
@@ -35,7 +35,13 @@ const routes: RouteRecordRaw[] = [
     path: '/auth',
     name: 'Auth',
     component: () => import('@/pages/Auth.vue')
-  }
+  },
+  {
+    path: '/writing',
+    name: 'Writing',
+    meta: { requireLogged: true },
+    component: () => import('@/pages/Writing.vue')
+  },
 ]
 
 const router = createRouter({

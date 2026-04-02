@@ -6,9 +6,13 @@
         </div>
 
         <!-- 内容区 -->
-         <div class="main-content-wrapper">
-
-         </div>
+        <div class="main-content-wrapper">
+            <router-view v-slot="{ Component }">
+                <transition name="fade" mode="out-in">
+                    <component :is="Component" />
+                </transition>
+            </router-view>
+        </div>
     </div>
 </template>
 
@@ -25,10 +29,20 @@
 
     .top-bar-wrapper {
         height: 50px;
-        margin-bottom: 10px;
     }
 
     .main-content-wrapper {
-        height: calc(100% - 50px - 10px);
+        height: calc(100% - 50px);
+        padding: 10px 5px 0;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+    transition: opacity 0.5s ease;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+    opacity: 0;
     }
 </style>

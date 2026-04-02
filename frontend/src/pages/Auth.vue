@@ -226,6 +226,7 @@
         try {
             // 调用登录接口并执行路由跳转
             await userStore.login(loginForm.username, loginForm.password)
+            await userStore.getUserInfo()
             router.replace('/')
         } catch (error: any) {
             const msg = errorParser(error)
@@ -248,6 +249,7 @@
         isLoading.value = true
         try {
             await userStore.register(registerForm.email, registerForm.username, registerForm.password)
+            await userStore.getUserInfo()
             router.replace('/')
         } catch (err: any) {
             const msg = errorParser(error)

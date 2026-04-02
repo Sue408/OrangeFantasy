@@ -141,12 +141,9 @@ const useUserStore = defineStore('user', () => {
      * @param nickname? <string> - 要修改的用户昵称
      * @param avatar? <string> - 要修改的用户头像(url/base64)
      */
-    const updateUserInfo = async (nickname?: string, avatar?: string) => {
+    const updateUserInfo = async (data: { nickname?: string, avatar?: string }) => {
         try {
-            const response = await updateUserInfoAPI({
-                ...(nickname && { nickname }),
-                ...(avatar && { avatar })
-            })
+            const response = await updateUserInfoAPI(data)
             userInfo.value = {
                 nickname: response.nickname,
                 username: response.username,

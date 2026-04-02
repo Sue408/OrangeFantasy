@@ -46,7 +46,7 @@ request.interceptors.response.use(
             // 判断是否为刷新请求或已经重试
             if (error.config?.url?.includes('auth/refresh')) {
                 await userStore.logout()
-                router.replace('')
+                router.replace('/')
                 return Promise.reject(error)
             }
 
@@ -58,7 +58,7 @@ request.interceptors.response.use(
             } catch(error) {
                 // 刷新失败则自动跳转到介绍页面并返回错误
                 await userStore.logout()
-                router.replace('')
+                router.replace('/')
                 return Promise.reject(error)
             }
         }
