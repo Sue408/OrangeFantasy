@@ -13,11 +13,17 @@
                 </transition>
             </router-view>
         </div>
+
+        <!-- 菜单栏 -->
+        <div class="menu-wrapper">
+            <Menu />
+        </div>
     </div>
 </template>
 
 <script setup lang='ts'>
     import TopBar from '@/components/home/TopBar.vue'
+    import Menu from '@/components/home/Menu.vue'
 
 </script>
 
@@ -25,6 +31,7 @@
     .home-container {
         height: 100%;
         width: 100%;
+        position: relative;
     }
 
     .top-bar-wrapper {
@@ -33,16 +40,24 @@
 
     .main-content-wrapper {
         height: calc(100% - 50px);
-        padding: 10px 5px 0;
+        padding: 10px 75px 0;
     }
 
     .fade-enter-active,
     .fade-leave-active {
-    transition: opacity 0.5s ease;
+        transition: opacity 0.5s ease;
     }
 
     .fade-enter-from,
     .fade-leave-to {
-    opacity: 0;
+        opacity: 0;
+    }
+
+    .menu-wrapper {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: calc(100% - 50px);
+        padding: 10px 0 0;
     }
 </style>
