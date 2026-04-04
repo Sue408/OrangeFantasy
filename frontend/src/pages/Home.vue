@@ -15,7 +15,7 @@
         </div>
 
         <!-- 菜单栏 -->
-        <div class="menu-wrapper">
+        <div class="menu-wrapper" v-if="userStore.isLogged">
             <Menu />
         </div>
     </div>
@@ -24,6 +24,9 @@
 <script setup lang='ts'>
     import TopBar from '@/components/home/TopBar.vue'
     import Menu from '@/components/home/Menu.vue'
+    import useUserStore from '@/stores/userSotre'
+
+    const userStore = useUserStore()
 
 </script>
 
