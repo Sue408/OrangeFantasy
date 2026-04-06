@@ -54,7 +54,7 @@ def update_user_info(
     更新用户信息接口
 
     - nickname?: 昵称
-    - avatar?: 头像URL/Base64
+    - avatar?: 头像 (URL/Base64)
     """
     user, db = user_and_db
 

@@ -4,8 +4,10 @@ API定义与导出
 """
 from .auth import router as auth_router
 from .user import router as user_router
+from .novel import router as novel_router
 
 __all__ = [
     "auth_router",
-    "user_router"
+    "user_router",
+    "novel_router"
 ]

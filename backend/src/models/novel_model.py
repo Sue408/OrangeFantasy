@@ -1,7 +1,7 @@
 """
 Novels表定义
 """
-from sqlalchemy import Integer, String, DateTime, ForeignKey
+from sqlalchemy import Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime, timezone
 
@@ -19,6 +19,8 @@ class Novel(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
     # 作品名称
     name: Mapped[str] = mapped_column(String(255), index=True)
+    # 封面
+    cover: Mapped[str | None] = mapped_column(Text)
     # 作品类型: 枚举 ("short"/"long")
     type: Mapped[str] = mapped_column(String(50))
     # 创建时间

@@ -4,8 +4,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src import config, Base, engine
-from src import auth_router, user_router
-
+from src import auth_router, user_router, novel_router
 
 # ========= 初始化数据库 =========
 Base.metadata.create_all(bind=engine)
@@ -44,6 +43,13 @@ app.include_router(
     user_router,
     prefix="/api/user",
     tags=["user"]
+)
+
+# 3. novel router
+app.include_router(
+    novel_router,
+    prefix="/api/novel",
+    tags=["novel"]
 )
 
 # ========= 程序入口 =========
