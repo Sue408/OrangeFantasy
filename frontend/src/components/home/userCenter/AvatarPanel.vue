@@ -30,16 +30,10 @@
 <script setup lang=ts>
     import { ref } from 'vue'
     import useUserStore from '@/stores/userSotre'
+    import fileToBase64 from '@/utils/imgToBase64'
 
     const userStore = useUserStore()
     const isUploading = ref<boolean>(false)
-
-    const sleep = async (ms: number) => {
-        return new Promise(resolve => {
-            setTimeout(resolve, ms)
-        })
-    }
-    
     /**
      * 头像更新方法
      */
@@ -49,9 +43,7 @@
         if (file) {
             // 设置为上传状态
             isUploading.value = true
-
             try {
-                await sleep(3000)
                 const avatar = await fileToBase64(file) // 将头像文件转换为base64编码
                 userStore.updateUserInfo({avatar})
                 userStore.getUserInfo()
@@ -61,26 +53,6 @@
                 isUploading.value = false
             }
         }
-    }
-
-    /**
-     * Base64转换方法
-     */
-    const fileToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader()
-
-            reader.onload = () => {
-                resolve(reader.result as string)
-            }
-
-            reader.onerror = () => {
-                reject('转换错误')
-            }
-
-            // 开始转换
-            reader.readAsDataURL(file)
-        })
     }
 </script>
 

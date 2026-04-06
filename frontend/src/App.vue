@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app-container" @contextmenu.prevent="console.log('打不开~')">
         <router-view v-slot="{ Component }">
             <transition name="app-fade" mode="out-in">
                 <component :is="Component" />

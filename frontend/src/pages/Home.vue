@@ -27,7 +27,6 @@
     import useUserStore from '@/stores/userSotre'
 
     const userStore = useUserStore()
-
 </script>
 
 <style scoped>
