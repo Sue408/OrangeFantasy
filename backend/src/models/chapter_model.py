@@ -24,7 +24,7 @@ class Chapter(Base):
     # 章节所属卷名
     step: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)
     # 章节内容
-    content: Mapped[str] = mapped_column(Text)
+    content: Mapped[str] = mapped_column(Text, default="")
     # 创建时间
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc))
     # 更新时间

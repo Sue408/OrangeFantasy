@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import desc
 from sqlalchemy.orm import Session, subqueryload
 
-from ..models import User, Novel
+from ..models import User, Novel, Chapter
 from ..utils import get_user_and_db
 from ..schemas.novel_schemas import *
 
@@ -40,8 +40,8 @@ async def get_novels(user_and_db: tuple[User, Session] = Depends(get_user_and_db
                 name=chapter.name,
                 number=chapter.number,
                 step=chapter.step,
-                created_at=chapter.create_at,
-                updated_at=chapter.update_at
+                created_at=chapter.created_at,
+                updated_at=chapter.updated_at
             ) for chapter in novel.chapters
         ]
         # 按照章节序号进行排序
@@ -87,9 +87,19 @@ async def create_novel(
         cover=request.cover,
         type=request.type
     )
+    db.add(novel)
+    db.flush()
+
+    # 如果为短篇类型则自动创建唯一的chapter对象
+    if request.type == 'short':
+        chapter = Chapter(
+            novel_id=novel.id,
+            name='unknow',
+            number=0
+        )
+        db.add(chapter)
 
     # 提交数据库操作
-    db.add(novel)
     db.commit()
     db.refresh(novel)
 
