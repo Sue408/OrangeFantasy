@@ -1,6 +1,7 @@
 """
 novel API设计
 """
+from datetime import timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import desc
 from sqlalchemy.orm import Session, subqueryload
@@ -138,6 +139,9 @@ async def update_novel(
         novel.name = request.name
     if request.cover:
         novel.cover = request.cover
+
+    # 更新updated_at
+    novel.updated_at = datetime.now(timezone.utc)
 
     # 提交数据库操作
     db.add(novel)

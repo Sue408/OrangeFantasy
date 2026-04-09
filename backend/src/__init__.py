@@ -4,7 +4,7 @@
 from .config import config
 from .db import Base, engine
 from .models import * # noqa
-from .api import auth_router, user_router, novel_router
+from .api import auth_router, user_router, novel_router, chapter_router
 
 __all__ = [
     "config",
@@ -12,5 +12,6 @@ __all__ = [
     "Base",
     "auth_router",
     "user_router",
-    novel_router
+    "novel_router",
+    "chapter_router"
 ]

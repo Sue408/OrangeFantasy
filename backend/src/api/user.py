@@ -1,6 +1,7 @@
 """
 user API定义
 """
+from datetime import timezone
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
@@ -63,6 +64,9 @@ def update_user_info(
         user.nickname = request.nickname
     if request.avatar:
         user.avatar = request.avatar
+
+    # 更新updated_at
+    user.updated_at = datetime.now(timezone.utc)
 
     # 提交数据库操作
     db.add(user)
