@@ -16,8 +16,10 @@
                         <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
                         <path d="M17.87 2.99a2 2 0 0 0-2.82 0l-7.96 7.84c-.14.13-.23.3-.27.49L5.8 15.76 4 18.01h2.83l1.14-1.13 3.59-.83c.18-.04.35-.13.48-.26l7.95-7.83c.38-.38.59-.88.6-1.42 0-.54-.21-1.04-.59-1.42L17.88 3Zm.71 3.53-7.24 7.13-2.12-2.12 7.24-7.13zM4 20h16v2H4z"></path>
                         </svg>
+                        
                     </p>
                     <p class="novel-name" v-else>{{ novel.name }}</p>
+                    <p style="font-size: 1rem;">{{ content.trim().length }}</p>
                 </div>
                 <div v-if="chapter" class="writing-box">
                     <textarea class="text" v-model="content" placeholder="请在这里写下你的故事..."></textarea>
@@ -62,7 +64,7 @@
     import ControlPanel from '@/components/writing/ControlPanel.vue'
     import type { NovelMeta } from '@/types/novelTypes.ts'
     import type { Chapter } from '@/types/chapterTypes.ts'
-    import { getChapterAPI, createChapterAPI, deleteChapterAPI } from '@/services/chapter.ts'
+    import { getChapterAPI, createChapterAPI, deleteChapterAPI, updateChapterAPI } from '@/services/chapter.ts'
     import SetChapterName from '@/components/writing/SetChapterName.vue'
 
     const novelStore = useNovelStore()
@@ -74,19 +76,23 @@
     const content = ref<string>('') // 当前章节内容
     const novel = computed(() => novelStore.novels[Number(props.id)] as NovelMeta)
 
-    // 监听chapter id变化异步获取数据
+    // 监听chapter id变化异步获取数据，并管理自动保存逻辑
     watch(currentChapterId, async () => {
         if (currentChapterId.value) {
             try {
                 chapter.value = null // 清空当前chapter记录
                 content.value = '' // 清空当前的content记录
-                const data = await getChapterAPI(currentChapterId.value)
 
-                chapter.value = data
-                content.value = data.content
+                await getChapterInfo(currentChapterId.value)
+
+                // 开启自动保存
+                startAutoSave()
             } catch(error) {
                 return Promise.reject(error)
             }
+        } else {
+            // 关闭章节则关闭自动保存
+            stopAutoSave()
         }
     })
 
@@ -106,6 +112,22 @@
             currentChapterId.value = novel.value.chapters[0]?.id || null
         }
     })
+
+    // ========= 获取章节详细信息方法 =========
+    /**
+     * 获取章节详细信息 (自动对chapter与content赋值)
+     * @param chapterId <number> - chapter id
+     */
+    const getChapterInfo = async (chapterId: number) => {
+        try {
+            const data = await getChapterAPI(chapterId)
+
+            chapter.value = data
+            content.value = data.content
+        } catch(error) {
+            return Promise.reject(error)
+        }
+    }
 
     // ========= 创建章节方法 =========
     /**
@@ -177,6 +199,56 @@
         }
     }
 
+    // ========= 自动保存内容方法 =========
+    let saveTimer: any = null
+
+    /**
+     * 开启自动保存
+     */
+    const startAutoSave = () => {
+        saveTimer = setInterval(async () => {
+            try {
+                await saveContent()
+            } catch(error) {
+                return Promise.reject(error)
+            }
+            
+        }, 1000)
+    }
+
+    /**
+     * 关闭自动保存
+     */
+    const stopAutoSave = () => {
+        if (saveTimer) {
+            clearInterval(saveTimer)
+            saveTimer = null
+        }
+    }
+
+    /**
+     * 文本内容保存方法
+     */
+    const saveContent = async () => {
+        // 确保已打开章节内容
+        if (!currentChapterId.value || !content.value || !chapter.value) return
+
+        // 检测是否对文本进行改动
+        if (content.value === chapter.value.content) return
+
+        // 调用API
+        try {
+            await updateChapterAPI(currentChapterId.value, {content: content.value})
+
+            // 自动更新当前章节
+            await getChapterInfo(currentChapterId.value)
+
+            console.log('自动保存成功')
+        } catch(error) {
+            return Promise.reject(error)
+        }
+    }
+
     // ========= 简单交互方法 =========
     const msg = ref<string>('')
     const sendMsgIsActive = computed((): boolean => {
@@ -213,8 +285,6 @@
     const sendMsg = async () => {
         console.log('发送消息')
     }
-
-
 </script>
 
 <style scoped>
@@ -300,6 +370,7 @@
         border-bottom: 1px solid var(--primary-color);
         display: flex;
         align-items: center;
+        justify-content: space-between;
         padding: 0 5px;
         user-select: none;
     }
@@ -308,7 +379,7 @@
         color: var(--supple-color);
         font-family: 'Btn-text';
         font-size: 1.25rem;
-        max-width: 100%;
+        max-width: 50%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
