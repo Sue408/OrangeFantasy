@@ -46,7 +46,7 @@
                         </svg>
                     </div>
                     <input v-model="novelName" type="text" class="novel-name" placeholder="请设置作品名"></input>
-                    <input @change="setCover" ref="coverInputRef" id="set-cover" style="display: none;" type="file" accept="image/png, image/jpeg, image/jpg, image/webp">
+                    <input @change="setCover" id="set-cover" style="display: none;" type="file" accept="image/png, image/jpeg, image/jpg, image/webp">
                 </div>
 
                 <!-- Form表单 -->
@@ -98,7 +98,9 @@
     import type { NovelType, CreateNovelRequest } from '@/types/novelTypes'
     import useNovelStore from '@/stores/novelStore'
     import { showDialog } from '@/utils/showDoalog'
+    import { useRouter } from 'vue-router'
 
+    const router = useRouter()
     const novelStore = useNovelStore()
     const emit = defineEmits(['closeCreateModal'])
 
@@ -171,9 +173,9 @@
         } finally {
             isloading.value = false
             setTimeout(() => {
-                emit('closeCreateModal') // 发出关闭事件
+                // emit('closeCreateModal') // 发出关闭事件
+                router.replace('writing/0')
             }, 50)
-            
         }
     }
 </script>

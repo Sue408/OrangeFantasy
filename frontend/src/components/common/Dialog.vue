@@ -91,10 +91,10 @@
     }
 
     .popup-box {
-        height: 150px;
-        width: 250px;
+        height: 200px;
+        width: 350px;
         background: rgba(35, 35, 35, 0.95);
-        border-radius: 24px;
+        border-radius: 12px;
         display: flex;
         flex-direction: column;
     }
@@ -105,7 +105,7 @@
         align-items: center;
         justify-content: center;
         color: var(--text-color);
-        font-size: 1.0rem;
+        font-size: 1.2rem;
         border-bottom: 2px solid var(--supple-color);
         font-family: 'Btn-text';
         gap: 15px;
@@ -118,14 +118,14 @@
     .popup-box .btn-wrapper {
         flex: 1;
         display: flex;
-        padding: 0 30px;
+        padding: 0 60px;
         align-items: center;
         justify-content: space-between;
     }
 
     .popup-box .btn-wrapper .btn {
-        width: 50px;
-        height: 25px;
+        width: 70px;
+        height: 35px;
         border-radius: 8px;
         border: none;
         background-color: rgba(75, 75, 75, 0.9);

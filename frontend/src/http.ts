@@ -51,7 +51,6 @@ request.interceptors.response.use(
             }
 
             // 自动进行token刷新并重新发送请求
-            
             try {
                 await userStore.refresh()
                 return request(error.config!)

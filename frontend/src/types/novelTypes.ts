@@ -28,6 +28,7 @@ export interface NovelMeta {
     type: NovelType
     chapters: ChapterForNovelMeta[]
     created_at: string
+    updated_at: string
 }
 
 // novels响应模型

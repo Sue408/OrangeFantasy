@@ -38,9 +38,15 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/writing',
+    name: 'WritingRedirect',
+    redirect: { name: 'Introduce' }
+  },
+  {
+    path: '/writing/:id',
     name: 'Writing',
     meta: { requireLogged: true },
-    component: () => import('@/pages/Writing.vue')
+    component: () => import('@/pages/Writing.vue'),
+    props: true
   },
 ]
 

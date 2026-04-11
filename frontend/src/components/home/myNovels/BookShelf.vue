@@ -14,9 +14,9 @@
         <!-- 网格布局面板 -->
         <div class="novels-wrapper">
             <!-- 作品项目 -->
-            <div class="novel-item" v-for="novel in novelStore.novels" :key="novel.id">
+            <div class="novel-item" v-for="(novel, index) in novelStore.novels" :key="novel.id">
                 <!-- 封面 -->
-                <div class="novel-cover" :class="{ 'have-cover': novel.cover }">
+                <div class="novel-cover" :class="{ 'have-cover': novel.cover }" @click="openNovel(index)">
                     <img v-if="novel.cover" :src="novel.cover" alt="cover">
                     <div v-else class="default-cover">
                         <svg  xmlns="http://www.w3.org/2000/svg" width="64" height="64"  
@@ -48,11 +48,21 @@
 <script setup lang='ts'>
     import { onMounted } from 'vue'
     import useNovelStore from '@/stores/novelStore'
+    import { useRouter } from 'vue-router'
+
+    const router = useRouter()
 
     const novelStore = useNovelStore()
     onMounted(async () => {
         await novelStore.getNovels()
     })
+
+    /**
+     * 路由跳转函数 (打开对应的novel)
+     */
+    const openNovel = (novelId: number) => {
+        router.replace(`/writing/${novelId}`)
+    }
 </script>
 
 <style scoped>
@@ -132,6 +142,7 @@
         justify-content: center;
         color: var(--text-color);
         transition: all 0.3s ease;
+        user-select: none;
     }
 
     .novel-cover img {

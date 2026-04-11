@@ -3,6 +3,7 @@ chapter API相关Pydantic模型定义
 """
 from pydantic import BaseModel
 from datetime import datetime
+from .novel_schemas import ChapterForNovelMeta
 
 class ChapterResponse(BaseModel):
     """chapter响应模型"""
@@ -13,6 +14,10 @@ class ChapterResponse(BaseModel):
     content: str
     created_at: datetime
     updated_at: datetime
+
+class ChaptersResponse(BaseModel):
+    """chapters响应模型"""
+    chapters: list[ChapterForNovelMeta]
 
 class UpdateChapterRequest(BaseModel):
     """更新chapter请求模型"""

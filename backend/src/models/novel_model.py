@@ -23,6 +23,8 @@ class Novel(Base):
     cover: Mapped[str | None] = mapped_column(Text)
     # 作品类型: 枚举 ("short"/"long")
     type: Mapped[str] = mapped_column(String(50))
+    # chapter计数器
+    chapter_counter: Mapped[int] = mapped_column(Integer, default=0)
     # 创建时间
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc))
     # 更新时间

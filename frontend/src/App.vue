@@ -56,7 +56,7 @@
 
     .app-fade-enter-active,
     .app-fade-leave-active {
-    transition: opacity 0.5s ease;
+    transition: opacity 0.2s ease;
     }
 
     .app-fade-enter-from,
@@ -66,11 +66,11 @@
 
     @font-face {
         font-family: 'Title';
-        src: url('fonts/title.ttf')
+        src: url('/fonts/title.ttf')
     }
 
     @font-face {
         font-family: 'Btn-Text';
-        src: url('fonts/btn-text.otf')
+        src: url('/fonts/btn-text.otf')
     }
 </style>

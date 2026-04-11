@@ -151,7 +151,6 @@
     import { useRouter } from 'vue-router'
     import useUserStore from '@/stores/userSotre'
     import errorParser from '@/utils/errorParser'
-    import Background from '@/components/auth/Background.vue'
 
     // 实例化router, user store
     const router = useRouter()
@@ -292,8 +291,8 @@
 
     .form-wrapper {
         position: relative;
-        height: 60%;
-        width: 60%;
+        height: 52%;
+        width: 55%;
         min-height: 300px;
         min-width: 450px;
         overflow: hidden;

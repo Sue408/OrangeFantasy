@@ -98,6 +98,8 @@ async def create_novel(
             name='unknow',
             number=0
         )
+        novel.chapter_counter = 1
+        db.add(novel)
         db.add(chapter)
 
     # 提交数据库操作
