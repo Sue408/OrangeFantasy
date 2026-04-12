@@ -22,7 +22,7 @@
                     <p style="font-size: 1rem;">{{ content.trim().length }}</p>
                 </div>
                 <div v-if="chapter" class="writing-box">
-                    <textarea class="text" v-model="content" placeholder="请在这里写下你的故事..."></textarea>
+                    <textarea class="text" v-model="content" placeholder="请在这里写下你的故事..." @input="debounceSaveContent"></textarea>
                     <div class="interact">
                         <textarea v-model="msg" @keydown.enter="sendMsgForEnter" placeholder="请告诉我你的需求..."></textarea>
                         <div class="send-btn">
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang='ts'>
-    import { computed, onBeforeMount, ref, watch, provide } from 'vue' 
+    import { computed, onBeforeMount, ref, watch, provide, onUnmounted, onBeforeUnmount } from 'vue' 
     import useNovelStore from '@/stores/novelStore.ts'
     import ControlPanel from '@/components/writing/ControlPanel.vue'
     import type { NovelMeta } from '@/types/novelTypes.ts'
@@ -83,8 +83,11 @@
                 chapter.value = null // 清空当前chapter记录
                 content.value = '' // 清空当前的content记录
 
-                await getChapterInfo(currentChapterId.value)
+                const data = await getChapterAPI(currentChapterId.value)
 
+                chapter.value = data
+                content.value = data.content
+                
                 // 开启自动保存
                 startAutoSave()
             } catch(error) {
@@ -112,22 +115,6 @@
             currentChapterId.value = novel.value.chapters[0]?.id || null
         }
     })
-
-    // ========= 获取章节详细信息方法 =========
-    /**
-     * 获取章节详细信息 (自动对chapter与content赋值)
-     * @param chapterId <number> - chapter id
-     */
-    const getChapterInfo = async (chapterId: number) => {
-        try {
-            const data = await getChapterAPI(chapterId)
-
-            chapter.value = data
-            content.value = data.content
-        } catch(error) {
-            return Promise.reject(error)
-        }
-    }
 
     // ========= 创建章节方法 =========
     /**
@@ -201,9 +188,10 @@
 
     // ========= 自动保存内容方法 =========
     let saveTimer: any = null
+    let debounceSaveTimer: number | null = null // 防抖保存计时器
 
     /**
-     * 开启自动保存
+     * 开启自动保存 (30s强制进行保存)
      */
     const startAutoSave = () => {
         saveTimer = setInterval(async () => {
@@ -213,7 +201,7 @@
                 return Promise.reject(error)
             }
             
-        }, 1000)
+        }, 30000)
     }
 
     /**
@@ -234,19 +222,35 @@
         if (!currentChapterId.value || !content.value || !chapter.value) return
 
         // 检测是否对文本进行改动
-        if (content.value === chapter.value.content) return
+        if (content.value.trim() === chapter.value.content.trim()) return
 
         // 调用API
         try {
             await updateChapterAPI(currentChapterId.value, {content: content.value})
 
             // 自动更新当前章节
-            await getChapterInfo(currentChapterId.value)
+            const data = await getChapterAPI(currentChapterId.value)
 
-            console.log('自动保存成功')
+            chapter.value = data
         } catch(error) {
             return Promise.reject(error)
         }
+    }
+
+    /**
+     * 防抖保存封装 (1s抖动范围)
+     */
+    const debounceSaveContent = () => {
+        if (debounceSaveTimer) {
+            clearTimeout(debounceSaveTimer)
+        }
+        debounceSaveTimer = setTimeout(async () => {
+                try {
+                    await saveContent()
+                } catch(error) {
+                    return Promise.reject(error)
+                }
+            }, 1000)
     }
 
     // ========= 简单交互方法 =========

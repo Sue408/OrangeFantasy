@@ -180,4 +180,3 @@ async def delete_novel(
     # 删除指定novel并提交数据库操作
     db.delete(novel)
     db.commit()
-    db.refresh(novel)
