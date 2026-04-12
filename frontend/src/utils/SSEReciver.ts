@@ -1,3 +1,6 @@
+import useUserStore from "@/stores/userSotre"
+const userSotre = useUserStore()
+
 // 基于fetch的POST类型SSE请求发送类封装
 interface Callbacks<T = object> {
     onMessage: (data: T) => void
@@ -7,6 +10,7 @@ class PostSSE<T> {
     url: string
     controller: AbortController | null = null
     isClosed: boolean = false
+    retry: boolean = false // 刷新标记
 
     // 对象初始化
     constructor(url: string) {
@@ -14,7 +18,7 @@ class PostSSE<T> {
     }
 
     // 连接主方法
-    async connect(data: object, callbacks: Callbacks<T>) {
+    async connect(data: object, callbacks: Callbacks<T>): Promise<any> {
         this.controller = new AbortController() // 初始化中止控制器
         try {
             // 获取响应对象
@@ -29,7 +33,29 @@ class PostSSE<T> {
             })
 
             // 检查响应状态
-            if (!response.ok || !response.body) return Promise.reject(`HTTP ${response.status}`)
+            if (!response.ok || !response.body) {
+                // 检查401错误
+                if (response.status === 401) {
+                    // 检查是否已经刷新过
+                    if (this.retry) return Promise.reject('达到最大刷新次数')
+
+                    try {
+                        // 尝试进行token刷新
+                        await userSotre.refresh()
+
+                        // 断开原来的SSE连接
+                        this.controller.abort()
+                        this.controller = new AbortController()
+
+                        // 重新调用connect方法
+                        return this.connect(data, callbacks)
+                    } catch(error) {
+                        return Promise.reject(`令牌刷新失败`)
+                    }
+                }
+
+                return Promise.reject(`HTTP ${response.status}`)
+            }
 
             // 获取读取连接对象
             const reader = response.body.getReader()
