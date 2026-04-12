@@ -6,8 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy import delete
 from sqlalchemy.orm import Session, subqueryload
 
-from .. import Novel
-from ..models import User, Chapter
+from ..models import User, Chapter, Novel
 from ..schemas.chapter_schemas import *
 from ..utils import get_user_and_db
 
@@ -196,7 +195,7 @@ async def update_chapter(
     # 按需更新chapter内容
     if request.name:
         chapter.name = request.name
-    if request.content:
+    if request.content is not None:
         chapter.content = request.content
 
     # 更新updated_at:

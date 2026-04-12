@@ -1,10 +1,11 @@
 import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
 import useUserStore from './stores/userSotre'
 import router from '@/router/index.ts'
+import config from '@/config'
 
 // 实例化axios对象
 const request = axios.create({
-    baseURL: '/api',
+    baseURL: `${config.baseUrl}`,
     timeout: 15000,
     headers: {
         'Content-Type': 'application/json'

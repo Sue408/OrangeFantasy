@@ -1,6 +1,5 @@
 // auth API相关接口调用
 import http from '@/http.ts'
-import config from '@/config.ts'
 import type { 
     RegisterRequest,
     TokenResponse,
@@ -12,19 +11,19 @@ import type {
  * 注册接口
  */
 export const registerAPI = async (data: RegisterRequest): Promise<TokenResponse> => {
-    return await http.post<TokenResponse>(`${config.baseUrl}/auth/register`, data)
+    return await http.post<TokenResponse>(`/auth/register`, data)
 }
 
 /**
  * 登录接口
  */
 export const loginAPI = async (data: LoginRequest): Promise<TokenResponse> => {
-    return await http.post<TokenResponse>(`${config.baseUrl}/auth/login`, data)
+    return await http.post<TokenResponse>(`/auth/login`, data)
 }
 
 /**
  * 刷新token接口
  */
 export const refreshAPI = async (data: RefreshRequest): Promise<RefreshResponse> => {
-    return await http.post<RefreshResponse>(`${config.baseUrl}/auth/refresh`, data)
+    return await http.post<RefreshResponse>(`/auth/refresh`, data)
 }

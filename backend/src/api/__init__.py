@@ -6,10 +6,12 @@ from .auth import router as auth_router
 from .user import router as user_router
 from .novel import router as novel_router
 from .chapter import router as chapter_router
+from .writing import router as writing_router
 
 __all__ = [
     "auth_router",
     "user_router",
     "novel_router",
-    "chapter_router"
+    "chapter_router",
+    "writing_router"
 ]

@@ -66,6 +66,7 @@
     import type { Chapter } from '@/types/chapterTypes.ts'
     import { getChapterAPI, createChapterAPI, deleteChapterAPI, updateChapterAPI } from '@/services/chapter.ts'
     import SetChapterName from '@/components/writing/SetChapterName.vue'
+    import PostSSE from '@/utils/SSEReciver'
 
     const novelStore = useNovelStore()
     const props = defineProps<{
@@ -219,7 +220,7 @@
      */
     const saveContent = async () => {
         // 确保已打开章节内容
-        if (!currentChapterId.value || !content.value || !chapter.value) return
+        if (!currentChapterId.value || !chapter.value) return
 
         // 检测是否对文本进行改动
         if (content.value.trim() === chapter.value.content.trim()) return
@@ -228,10 +229,11 @@
         try {
             await updateChapterAPI(currentChapterId.value, {content: content.value})
 
-            // 自动更新当前章节
+            // 获取最新的当前章节数据
             const data = await getChapterAPI(currentChapterId.value)
-
             chapter.value = data
+
+            console.log('保存成功')
         } catch(error) {
             return Promise.reject(error)
         }
@@ -255,8 +257,9 @@
 
     // ========= 简单交互方法 =========
     const msg = ref<string>('')
+    const isSending = ref<boolean>(false)
     const sendMsgIsActive = computed((): boolean => {
-        if (msg.value.trim()) {
+        if (msg.value.trim() && !isSending.value) {
             return true
         }
         return false
@@ -287,7 +290,29 @@
      * 消息发送方法
      */
     const sendMsg = async () => {
-        console.log('发送消息')
+        // 标记为正在发送消息
+        isSending.value = true
+
+        // 初始化SSE连接对象
+        const postSSE = new PostSSE<{content: string}>(`/api/writing/${novel.value.id}`)
+
+        // 启动SSE连接
+        try {
+            await postSSE.connect(
+                {},
+                {
+                    onMessage: (data) => {
+                        content.value += data.content
+                    }
+                }
+            )
+        } catch(error) {
+            return Promise.reject(error)
+        } finally {
+            isSending.value = false
+            msg.value = '' // 清空输入框内容
+        }
+        
     }
 </script>
 
