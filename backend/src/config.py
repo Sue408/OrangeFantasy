@@ -25,7 +25,7 @@ class SecuritySetting(BaseSettings):
     key: str = "11111111111111111111111111111111"
     algorithm: str = "HS256"
     access_token_expires_minutes: int = 30
-    refresh_token_expires_days: int = 1
+    refresh_token_expires_days: int = 7
 
 class Setting(BaseSettings):
     """核心配置类定义"""

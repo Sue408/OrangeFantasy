@@ -6,7 +6,7 @@ interface Callbacks<T = object> {
     onMessage: (data: T) => void
 }
 
-class PostSSE<T> {
+class PostSSE<ReqData = object, ResData = object> {
     url: string
     controller: AbortController | null = null
     isClosed: boolean = false
@@ -18,7 +18,7 @@ class PostSSE<T> {
     }
 
     // 连接主方法
-    async connect(data: object, callbacks: Callbacks<T>): Promise<any> {
+    async connect(data: ReqData, callbacks: Callbacks<ResData>): Promise<any> {
         this.controller = new AbortController() // 初始化中止控制器
         try {
             // 获取响应对象

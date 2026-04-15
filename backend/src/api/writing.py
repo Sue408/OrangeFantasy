@@ -4,11 +4,12 @@ writing API定义
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
-import asyncio
 import json
 
 from ..models import User
 from ..utils import get_user_and_db
+from ..schemas.writing_schemas import *
+from ..ai.ai_interact import chain
 
 # ========= 初始化router对象 =========
 router = APIRouter()
@@ -24,6 +25,7 @@ router = APIRouter()
 )
 async def writing(
         novel_id: int,
+        request: WritingRequest,
         user_and_db: tuple[User, Session] = Depends(get_user_and_db)
     ):
     """
@@ -33,10 +35,9 @@ async def writing(
 
     async def event_generator():
         """测试生成器用例"""
-        for _str in "你好，我叫doro！":
+        async for _str in chain.astream({"message": request.msg}):
             data = json.dumps({"content": _str})
             yield f"data: {data}\n\n"
-            await asyncio.sleep(0.1)
 
         yield "event: [DONE]\n\n"
 

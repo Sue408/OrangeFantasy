@@ -23,8 +23,8 @@
                 </div>
                 <div v-if="chapter" class="writing-box">
                     <textarea class="text" v-model="content" placeholder="请在这里写下你的故事..." @input="debounceSaveContent"></textarea>
-                    <div class="interact">
-                        <textarea v-model="msg" @keydown.enter="sendMsgForEnter" placeholder="请告诉我你的需求..."></textarea>
+                    <div class="interact" ref="MsgWrapperRef">
+                        <textarea v-model="msg" ref="MsgTextareaRef" @input="autoResize" @keydown.enter="sendMsgForEnter" placeholder="hello~"></textarea>
                         <div class="send-btn">
                             <button :class="{ active: sendMsgIsActive }" :disabled="!sendMsgIsActive" @click="sendMsg">
                                 <svg  xmlns="http://www.w3.org/2000/svg" width="32" height="32"  
@@ -42,6 +42,8 @@
                     <p>正在加载内容...</p>
                 </div>
             </div>
+
+            <!-- 遮罩层 -->
             <div v-else class="placeholder-wrapper">
                 <svg  xmlns="http://www.w3.org/2000/svg" width="72" height="72"  
                 fill="currentColor" viewBox="0 0 24 24" @click="createChapter" >
@@ -59,7 +61,7 @@
 </template>
 
 <script setup lang='ts'>
-    import { computed, onBeforeMount, ref, watch, provide, onUnmounted, onBeforeUnmount } from 'vue' 
+    import { computed, onBeforeMount, ref, watch, provide } from 'vue' 
     import useNovelStore from '@/stores/novelStore.ts'
     import ControlPanel from '@/components/writing/ControlPanel.vue'
     import type { NovelMeta } from '@/types/novelTypes.ts'
@@ -116,6 +118,31 @@
             currentChapterId.value = novel.value.chapters[0]?.id || null
         }
     })
+
+    // ========= 消息输入事件与自动高度调节方法 =========
+    const MsgTextareaRef = ref<HTMLTextAreaElement | null>(null)
+    const MsgWrapperRef = ref<HTMLDivElement | null>(null)
+    let resizeTimer: number | null = null
+    
+    const autoResize = () => {
+        if (resizeTimer) {
+            clearTimeout(resizeTimer)
+        }
+
+        resizeTimer = setTimeout(() => {
+            if (MsgTextareaRef.value && MsgWrapperRef.value) {
+                const msgHeight = MsgTextareaRef.value.scrollHeight // 获取textarea高度
+
+                const MIN_MEIGHT = 150
+                const MAX_HEIGHT = 400
+                const clampedHeight = Math.min(MAX_HEIGHT, Math.max(MIN_MEIGHT, msgHeight))
+
+                MsgWrapperRef.value.style.height = clampedHeight + 'px'
+                
+                console.log(`输入框高度: ${msgHeight}, 容器高度: ${MsgWrapperRef.value.style.height}`)
+            }
+        }, 5) 
+    }
 
     // ========= 创建章节方法 =========
     /**
@@ -294,12 +321,12 @@
         isSending.value = true
 
         // 初始化SSE连接对象
-        const postSSE = new PostSSE<{content: string}>(`/api/writing/${novel.value.id}`)
+        const postSSE = new PostSSE<{msg: string}, {content: string}>(`/api/writing/${novel.value.id}`)
 
         // 启动SSE连接
         try {
             await postSSE.connect(
-                {},
+                {msg: msg.value},
                 {
                     onMessage: (data) => {
                         content.value += data.content
@@ -466,6 +493,8 @@
 
     .right-wrapper .interact {
         height: 150px;
+        min-height: 0;
+        overflow: hidden;
         padding: 15px;
         background-color: rgba(35, 35, 35, 0.75);
         margin: 0 15px;

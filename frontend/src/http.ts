@@ -44,7 +44,7 @@ request.interceptors.response.use(
         if (statusCode === 401) {
             const userStore = useUserStore()
 
-            // 判断是否为刷新请求或已经重试
+            // 判断是否为刷新请求
             if (error.config?.url?.includes('auth/refresh')) {
                 await userStore.logout()
                 router.replace('/')
